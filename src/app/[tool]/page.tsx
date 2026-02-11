@@ -78,8 +78,8 @@ export default function ToolPage() {
     setStatus("processing");
     try {
       const result = await processFile(
-        isMergeTool ? files : files[0],
         tool.title,
+        isMergeTool ? files : files[0],
         {
           range: isSplitTool ? splitRange : undefined,
           compressionLevel,
