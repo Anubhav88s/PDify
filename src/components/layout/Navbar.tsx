@@ -1,12 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Menu, X, FileText } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navLinks = [
     { name: "Merge PDF", href: "/merge-pdf" },
@@ -16,59 +23,102 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border glass">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center space-x-2">
-          <FileText className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold text-gradient">PDify</span>
+    <nav
+      className={`sticky top-0 z-50 w-full transition-all duration-500 ${
+        scrolled
+          ? "glass-nav shadow-lg shadow-black/20"
+          : "bg-transparent border-b border-transparent"
+      }`}
+    >
+      <div className="flex h-16 w-full items-center justify-between px-6 lg:px-12 max-w-7xl mx-auto">
+        <Link href="/" className="flex items-center space-x-2.5 group">
+          <div className="relative h-10 w-10 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+            <Image
+              src="/logo.png"
+              alt="PDify Logo"
+              fill
+              className="object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.4)]"
+            />
+          </div>
+          <span className="text-xl font-bold text-gradient tracking-tight">
+            PDify
+          </span>
         </Link>
 
         {/* Desktop Interface */}
-        <div className="hidden md:flex md:items-center md:space-x-8">
+        <div className="hidden md:flex md:items-center md:space-x-1">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+              className="relative text-sm font-medium text-slate-400 hover:text-white px-4 py-2 rounded-full transition-all duration-300 hover:bg-white/[0.06] group"
             >
               {link.name}
+              <span className="absolute inset-x-4 -bottom-px h-px bg-gradient-to-r from-blue-500/0 via-blue-500/70 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </Link>
           ))}
+          <Link
+            href="/#tools"
+            className="ml-3 text-sm font-semibold text-white bg-gradient-brand px-5 py-2 rounded-full shadow-md shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300 shimmer"
+          >
+            All Tools
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
         <div className="flex md:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-gray-700 hover:text-[#E5322D]"
+            className="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-white/[0.06] transition-all duration-200"
           >
-            {isOpen ? (
-              <X className="h-6 w-6 text-foreground" />
-            ) : (
-              <Menu className="h-6 w-6 text-foreground" />
-            )}
+            <div className="relative w-6 h-6">
+              <Menu
+                className={`h-6 w-6 absolute transition-all duration-300 ${
+                  isOpen
+                    ? "opacity-0 rotate-90 scale-50"
+                    : "opacity-100 rotate-0 scale-100"
+                }`}
+              />
+              <X
+                className={`h-6 w-6 absolute transition-all duration-300 ${
+                  isOpen
+                    ? "opacity-100 rotate-0 scale-100"
+                    : "opacity-0 -rotate-90 scale-50"
+                }`}
+              />
+            </div>
             <span className="sr-only">Toggle menu</span>
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="space-y-1 px-4 pb-3 pt-2 sm:px-3 bg-background border-b border-border">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-secondary hover:text-primary"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-400 ease-in-out ${
+          isOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="space-y-1 px-6 pb-5 pt-3 bg-slate-950/95 border-b border-white/5 backdrop-blur-2xl">
+          {navLinks.map((link, i) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              className="block rounded-xl px-4 py-3 text-base font-medium text-slate-400 hover:bg-white/[0.06] hover:text-white transition-all"
+              onClick={() => setIsOpen(false)}
+              style={{ animationDelay: `${i * 50}ms` }}
+            >
+              {link.name}
+            </Link>
+          ))}
+          <Link
+            href="/#tools"
+            className="block text-center mt-3 text-sm font-semibold text-white bg-gradient-brand px-5 py-3 rounded-xl shadow-md shadow-blue-500/20"
+            onClick={() => setIsOpen(false)}
+          >
+            View All Tools →
+          </Link>
         </div>
-      )}
+      </div>
     </nav>
   );
 }

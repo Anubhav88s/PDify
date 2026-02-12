@@ -1,36 +1,88 @@
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
+// A4 at 96 DPI
+const A4_WIDTH_PX = 794;
+const A4_HEIGHT_PX = 1123;
+// Scale for higher quality capture
+const CAPTURE_SCALE = 2;
+
+/**
+ * Helper: takes a tall canvas and slices it into A4-page-height chunks,
+ * adding each as a page to the PDF.
+ */
+function addCanvasPagesToPdf(
+  fullCanvas: HTMLCanvasElement,
+  pdf: jsPDF,
+  pdfPageWidth: number,
+  pdfPageHeight: number,
+  isFirstPageOfPdf: boolean,
+) {
+  const scaledPageWidth = A4_WIDTH_PX * CAPTURE_SCALE;
+  const scaledPageHeight = A4_HEIGHT_PX * CAPTURE_SCALE;
+  const totalHeight = fullCanvas.height;
+  const totalPages = Math.ceil(totalHeight / scaledPageHeight);
+
+  for (let page = 0; page < totalPages; page++) {
+    // Add new PDF page (skip for the very first page of the PDF)
+    if (!(page === 0 && isFirstPageOfPdf)) {
+      pdf.addPage();
+    }
+
+    const pageCanvas = document.createElement("canvas");
+    pageCanvas.width = scaledPageWidth;
+    pageCanvas.height = scaledPageHeight;
+    const ctx = pageCanvas.getContext("2d")!;
+
+    // White background (important for last page which may be shorter)
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, scaledPageWidth, scaledPageHeight);
+
+    const sourceY = page * scaledPageHeight;
+    const sourceHeight = Math.min(scaledPageHeight, totalHeight - sourceY);
+
+    ctx.drawImage(
+      fullCanvas,
+      0, sourceY, scaledPageWidth, sourceHeight,
+      0, 0, scaledPageWidth, sourceHeight,
+    );
+
+    const imgData = pageCanvas.toDataURL("image/jpeg", 0.95);
+    pdf.addImage(imgData, "JPEG", 0, 0, pdfPageWidth, pdfPageHeight);
+  }
+}
+
 export const wordToPdf = async (
   file: File,
 ): Promise<{ success: boolean; url: string; message: string }> => {
   let container: HTMLDivElement | null = null;
   try {
     const arrayBuffer = await file.arrayBuffer();
-    // Dynamic import
     // @ts-ignore
     const { renderAsync } = await import("docx-preview");
 
-    // Create a temporary container
     container = document.createElement("div");
-    // Start hidden but available for rendering arithmetic
     container.style.position = "absolute";
     container.style.left = "-9999px";
     container.style.top = "0";
-    container.style.width = "794px"; // A4 @ 96dpi
+    container.style.width = `${A4_WIDTH_PX}px`;
     container.style.backgroundColor = "#fff";
 
-    // Injecting CSS to slightly condense content and force white backgrounds
     const style = document.createElement("style");
     style.innerHTML = `
         .docx-wrapper { background: white !important; padding: 0 !important; }
-        .docx-wrapper > section { box-shadow: none !important; margin-bottom: 0 !important; }
+        .docx-wrapper > section {
+          box-shadow: none !important;
+          margin: 0 !important;
+          width: ${A4_WIDTH_PX}px !important;
+          box-sizing: border-box !important;
+        }
         * { color-adjust: exact; -webkit-print-color-adjust: exact; }
       `;
     container.appendChild(style);
     document.body.appendChild(container);
 
-    // Render DOCX to HTML
+    // Render DOCX to HTML with page breaks
     await renderAsync(arrayBuffer, container, undefined, {
       inWrapper: true,
       ignoreWidth: false,
@@ -39,46 +91,47 @@ export const wordToPdf = async (
       useBase64URL: true,
     });
 
-    // Convert HTML to PDF via canvas
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "pt",
       format: "a4",
     });
 
-    const wrapper = container.querySelector(".docx-wrapper");
+    const pdfPageWidth = pdf.internal.pageSize.getWidth();
+    const pdfPageHeight = pdf.internal.pageSize.getHeight();
+
+    const wrapper = container.querySelector(".docx-wrapper") as HTMLElement;
     if (!wrapper) throw new Error("Rendering wrapper not found");
 
-    const pages = wrapper.querySelectorAll("section");
+    const sections = wrapper.querySelectorAll("section");
 
-    if (pages.length === 0) {
-      // Fallback if no sections found (maybe simple doc)
-      // Just try to capture the wrapper
-      const canvas = await html2canvas(wrapper as HTMLElement, {
-        scale: 2,
+    if (sections.length === 0) {
+      // Fallback: no sections, capture entire wrapper and slice
+      const canvas = await html2canvas(wrapper, {
+        scale: CAPTURE_SCALE,
         useCORS: true,
         backgroundColor: "#ffffff",
+        width: A4_WIDTH_PX,
+        windowWidth: A4_WIDTH_PX,
       });
-      const imgData = canvas.toDataURL("image/png");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      addCanvasPagesToPdf(canvas, pdf, pdfPageWidth, pdfPageHeight, true);
     } else {
-      for (let i = 0; i < pages.length; i++) {
-        const section = pages[i] as HTMLElement;
-        if (i > 0) pdf.addPage();
+      // Capture each section individually (respects page breaks),
+      // and if a section is taller than A4, slice it into multiple pages.
+      let isFirstPage = true;
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i] as HTMLElement;
 
         const canvas = await html2canvas(section, {
-          scale: 2,
+          scale: CAPTURE_SCALE,
           useCORS: true,
           backgroundColor: "#ffffff",
+          width: A4_WIDTH_PX,
+          windowWidth: A4_WIDTH_PX,
         });
 
-        const imgData = canvas.toDataURL("image/jpeg", 0.95);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+        addCanvasPagesToPdf(canvas, pdf, pdfPageWidth, pdfPageHeight, isFirstPage);
+        isFirstPage = false;
       }
     }
 
