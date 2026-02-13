@@ -1,4 +1,21 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PDify - Online PDF Tools
+
+PDify is a comprehensive, free, and open-source online platform designed to handle all your PDF needs. Merge, split, compress, convert, and manage your PDF documents with ease—all in one place, with no signup required.
+
+## Features
+
+- **Merge PDF**: Combine multiple PDFs into a single document.
+- **Split PDF**: Separate a PDF into individual pages or extract specific pages.
+- **Compress PDF**: Reduce the file size of your PDFs while maintaining quality.
+- **Convert PDF**: Convert PDFs to other formats (Word, Excel, JPG, etc.) and vice versa.
+- **Secure**: Files are processed locally or securely, prioritizing user privacy.
+- **Responsive Design**: formatting works seamlessly on desktop and mobile.
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com)
+- **Icons**: [Lucide React](https://lucide.dev)
 
 ## Getting Started
 
@@ -16,21 +33,14 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Copyright & License
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Important**
 
-## Learn More
+All rights reserved. Copyright © VR Bharat.
 
-To learn more about Next.js, take a look at the following resources:
+This software and associated documentation files (the "Software") are the proprietary property of VR Bharat.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+No one is allowed to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software without the explicit written permission of VR Bharat.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Any unauthorized use, reproduction, or distribution is strictly prohibited.

@@ -13,9 +13,9 @@ export function Footer() {
           {/* Brand Section */}
           <div className="md:col-span-2 space-y-5">
             <div className="flex items-center space-x-2.5 group">
-              <div className="relative h-9 w-9 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+              <div className="relative h-12 w-12 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
                 <Image
-                  src="/logo.png"
+                  src="/logo-v2.png"
                   alt="PDify Logo"
                   fill
                   className="object-contain"

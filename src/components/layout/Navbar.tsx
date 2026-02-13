@@ -32,9 +32,9 @@ export function Navbar() {
     >
       <div className="flex h-16 w-full items-center justify-between px-6 lg:px-12 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center space-x-2.5 group">
-          <div className="relative h-10 w-10 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+          <div className="relative h-12 w-12 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
             <Image
-              src="/logo.png"
+              src="/logo-v2.png"
               alt="PDify Logo"
               fill
               className="object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.4)]"
