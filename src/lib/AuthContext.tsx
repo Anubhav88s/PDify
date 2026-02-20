@@ -6,7 +6,8 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
   signOut,
 } from "firebase/auth";
@@ -41,6 +42,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(user);
       setLoading(false);
     });
+    // Handle redirect result on page load
+    getRedirectResult(auth).catch(console.error);
     return unsubscribe;
   }, []);
 
@@ -53,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const handleSignInWithGoogle = async () => {
-    await signInWithPopup(auth, googleProvider);
+    await signInWithRedirect(auth, googleProvider);
   };
 
   const logOut = async () => {
