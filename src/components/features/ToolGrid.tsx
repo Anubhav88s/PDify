@@ -10,8 +10,11 @@ import {
   FileText,
   Presentation,
   ArrowRight,
+  Sparkles,
+  Lock,
 } from "lucide-react";
 import { toolsConfig } from "@/lib/tools";
+import { useAuth } from "@/lib/AuthContext";
 
 const iconMap: Record<string, any> = {
   "merge-pdf": FileStack,
@@ -25,6 +28,7 @@ const iconMap: Record<string, any> = {
   "pdf-to-image": ImageIcon,
   "pdf-to-ppt": Presentation,
   "pdf-to-doc": FileText,
+  "summarize-pdf": Sparkles,
 };
 
 // Unique gradient for each tool icon to add color variety
@@ -40,14 +44,19 @@ const iconGradients: Record<string, string> = {
   "pdf-to-image": "from-sky-500 to-blue-500",
   "pdf-to-ppt": "from-violet-600 to-purple-600",
   "pdf-to-doc": "from-blue-500 to-blue-700",
+  "summarize-pdf": "from-emerald-500 to-teal-600",
 };
 
 export function ToolGrid() {
+  const { user } = useAuth();
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4">
       {Object.entries(toolsConfig).map(([key, tool], index) => {
         const Icon = iconMap[key] || FileType;
         const gradient = iconGradients[key] || "from-blue-500 to-violet-500";
+        const isLocked = tool.requiresAuth && !user;
+
         return (
           <Link
             href={`/${key}`}
@@ -58,7 +67,24 @@ export function ToolGrid() {
             <div className="relative h-full overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-blue-500/30 hover:bg-white/[0.05] hover:shadow-2xl hover:shadow-blue-500/[0.08]">
               {/* Hover glow */}
               <div className="absolute -right-24 -top-24 z-0 h-[200px] w-[200px] rounded-full bg-blue-500/0 blur-[80px] transition-all duration-500 group-hover:bg-blue-500/10" />
-              
+
+              {/* Auth badge */}
+              {tool.requiresAuth && (
+                <div className="absolute top-4 right-4 z-10">
+                  {isLocked ? (
+                    <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                      <Lock className="h-3 w-3" />
+                      <span className="text-[10px] font-semibold">Sign in</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                      <Sparkles className="h-3 w-3" />
+                      <span className="text-[10px] font-semibold">AI</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="relative z-10 flex flex-col items-start gap-4">
                 {/* Icon */}
                 <div

@@ -7,6 +7,7 @@ export const toolsConfig: Record<
     color: string;
     accept: string;
     fileLabel: string;
+    requiresAuth?: boolean;
   }
 > = {
   "merge-pdf": {
@@ -96,5 +97,14 @@ export const toolsConfig: Record<
     color: "bg-blue-700 hover:bg-blue-800",
     accept: ".pdf",
     fileLabel: "PDF file",
+  },
+  "summarize-pdf": {
+    title: "Summarize PDF",
+    description: "Get an AI-powered summary of your PDF document.",
+    action: "Summarize PDF",
+    color: "bg-emerald-600 hover:bg-emerald-700",
+    accept: ".pdf",
+    fileLabel: "PDF file",
+    requiresAuth: true,
   },
 };

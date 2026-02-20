@@ -3,11 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, User } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { user, loading, logOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -21,6 +23,14 @@ export function Navbar() {
     { name: "Compress PDF", href: "/compress-pdf" },
     { name: "Convert PDF", href: "/convert-pdf" },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <nav
@@ -63,6 +73,44 @@ export function Navbar() {
           >
             All Tools
           </Link>
+
+          {/* Auth Buttons */}
+          <div className="ml-4 flex items-center gap-2">
+            {loading ? (
+              <div className="h-8 w-20 rounded-full bg-white/[0.04] animate-pulse" />
+            ) : user ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06]">
+                  <User className="h-3.5 w-3.5 text-blue-400" />
+                  <span className="text-xs text-slate-300 max-w-[120px] truncate">
+                    {user.email}
+                  </span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-red-400 px-3 py-1.5 rounded-full hover:bg-red-500/[0.06] transition-all duration-200"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  <span className="hidden lg:inline">Sign Out</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="text-sm font-medium text-slate-300 hover:text-white px-4 py-2 rounded-full border border-white/[0.08] hover:bg-white/[0.06] transition-all duration-300"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2 rounded-full shadow-md shadow-violet-500/20 hover:shadow-violet-500/40 hover:scale-105 transition-all duration-300"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
@@ -95,7 +143,7 @@ export function Navbar() {
       {/* Mobile Menu */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-400 ease-in-out ${
-          isOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="space-y-1 px-6 pb-5 pt-3 bg-slate-950/95 border-b border-white/5 backdrop-blur-2xl">
@@ -117,6 +165,46 @@ export function Navbar() {
           >
             View All Tools →
           </Link>
+
+          {/* Mobile Auth */}
+          <div className="mt-3 pt-3 border-t border-white/[0.06]">
+            {loading ? null : user ? (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 px-4 py-2">
+                  <User className="h-4 w-4 text-blue-400" />
+                  <span className="text-sm text-slate-300 truncate">
+                    {user.email}
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                  }}
+                  className="w-full text-center text-sm font-medium text-red-400 hover:bg-red-500/[0.06] px-4 py-3 rounded-xl transition-all"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Link
+                  href="/login"
+                  className="block text-center text-sm font-medium text-slate-300 border border-white/[0.08] hover:bg-white/[0.06] px-5 py-3 rounded-xl transition-all"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="block text-center text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 rounded-xl shadow-md shadow-violet-500/20"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

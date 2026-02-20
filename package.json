@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "clsx": "^2.1.1",
     "docx": "^9.5.1",
     "docx-preview": "^0.3.7",
+    "firebase": "^12.9.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.1.0",
     "lucide-react": "^0.563.0",

@@ -5,6 +5,8 @@ import { useState } from "react";
 import { FileUpload } from "@/components/features/FileUpload";
 import { Button } from "@/components/ui/Button";
 import { processFile } from "@/lib/mockApi";
+import { summarizePdf } from "@/lib/services/summarizePdf";
+import { useAuth } from "@/lib/AuthContext";
 import {
   Loader2,
   CheckCircle,
@@ -12,6 +14,10 @@ import {
   ArrowLeft,
   Trash2,
   RotateCcw,
+  Lock,
+  Sparkles,
+  Copy,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -24,6 +30,9 @@ export default function ToolPage() {
   const tool = toolsConfig[toolKey];
   const isMergeTool = toolKey === "merge-pdf";
   const isSplitTool = toolKey === "split-pdf";
+  const isSummarizeTool = toolKey === "summarize-pdf";
+
+  const { user, loading: authLoading } = useAuth();
 
   const [files, setFiles] = useState<File[]>([]);
   const [splitRange, setSplitRange] = useState("");
@@ -31,6 +40,8 @@ export default function ToolPage() {
     "idle" | "processing" | "success" | "error"
   >("idle");
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [summaryText, setSummaryText] = useState<string>("");
+  const [copied, setCopied] = useState(false);
   const [compressionLevel, setCompressionLevel] = useState<
     "extreme" | "recommended" | "less"
   >("recommended");
@@ -48,6 +59,61 @@ export default function ToolPage() {
     );
   }
 
+  // Auth gate for protected tools
+  if (tool.requiresAuth && !authLoading && !user) {
+    return (
+      <div className="relative min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-transparent">
+        <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-20" />
+        <div className="mx-auto max-w-2xl animate-fade-up">
+          <div className="text-center mb-10">
+            <Link
+              href="/"
+              className="inline-flex items-center text-sm text-slate-500 hover:text-white mb-6 transition-colors duration-200 group"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" />
+              Back to Home
+            </Link>
+            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
+              {tool.title}
+            </h1>
+          </div>
+
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm p-8 sm:p-12 shadow-2xl shadow-black/20 text-center">
+            <div className="inline-flex p-5 rounded-2xl bg-amber-500/[0.08] border border-amber-500/15 mb-6">
+              <Lock className="h-10 w-10 text-amber-400" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Sign In Required
+            </h2>
+            <p className="text-slate-400 mb-8 max-w-sm mx-auto">
+              This AI-powered tool requires you to be signed in. Create a free
+              account to get started.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/login">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto min-w-[160px] bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-xl shadow-blue-500/20 hover:shadow-blue-500/30 hover:scale-[1.02] rounded-xl"
+                >
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto min-w-[160px] rounded-xl"
+                >
+                  Create Account
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const handleFileSelect = (selectedFiles: File[]) => {
     if (isMergeTool) {
       setFiles((prev) => [...prev, ...selectedFiles]);
@@ -56,6 +122,7 @@ export default function ToolPage() {
     }
     setStatus("idle");
     setDownloadUrl(null);
+    setSummaryText("");
   };
 
   const handleRemoveFile = (index: number) => {
@@ -65,6 +132,7 @@ export default function ToolPage() {
     if (newFiles.length === 0) {
       setStatus("idle");
       setDownloadUrl(null);
+      setSummaryText("");
     }
   };
 
@@ -77,24 +145,53 @@ export default function ToolPage() {
 
     setStatus("processing");
     try {
-      const result = await processFile(
-        tool.title,
-        isMergeTool ? files : files[0],
-        {
-          range: isSplitTool ? splitRange : undefined,
-          compressionLevel,
-        },
-      );
-
-      if (result.success) {
-        setDownloadUrl(result.url);
-        setStatus("success");
+      if (isSummarizeTool) {
+        const result = await summarizePdf(files[0]);
+        if (result.success) {
+          setSummaryText(result.summary);
+          setStatus("success");
+        } else {
+          setStatus("error");
+          alert(result.message);
+        }
       } else {
-        setStatus("error");
-        alert(result.message);
+        const result = await processFile(
+          tool.title,
+          isMergeTool ? files : files[0],
+          {
+            range: isSplitTool ? splitRange : undefined,
+            compressionLevel,
+          }
+        );
+
+        if (result.success) {
+          setDownloadUrl(result.url);
+          setStatus("success");
+        } else {
+          setStatus("error");
+          alert(result.message);
+        }
       }
     } catch {
       setStatus("error");
+    }
+  };
+
+  const handleCopySummary = async () => {
+    try {
+      await navigator.clipboard.writeText(summaryText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback
+      const textarea = document.createElement("textarea");
+      textarea.value = summaryText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -114,6 +211,9 @@ export default function ToolPage() {
         </Link>
         <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
           {tool.title}
+          {isSummarizeTool && (
+            <Sparkles className="inline-block ml-3 h-8 w-8 text-emerald-400" />
+          )}
         </h1>
         <p className="mt-3 text-base sm:text-lg text-slate-400">
           {tool.description}
@@ -121,7 +221,12 @@ export default function ToolPage() {
       </div>
 
       {/* Main Card */}
-      <div className="mx-auto max-w-2xl animate-fade-up animation-delay-100">
+      <div
+        className={cn(
+          "mx-auto animate-fade-up animation-delay-100",
+          isSummarizeTool && status === "success" ? "max-w-4xl" : "max-w-2xl"
+        )}
+      >
         <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm p-6 sm:p-8 shadow-2xl shadow-black/20 min-h-[420px] flex flex-col items-center justify-center">
           {/* Upload state */}
           {status === "idle" && (files.length === 0 || isMergeTool) && (
@@ -218,7 +323,7 @@ export default function ToolPage() {
                           "flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200",
                           compressionLevel === level.id
                             ? "bg-gradient-to-br from-violet-600 to-indigo-600 border-violet-500 text-white shadow-lg shadow-violet-500/20"
-                            : "bg-white/[0.02] border-violet-500/10 text-violet-400 hover:bg-violet-500/[0.06] hover:border-violet-500/20",
+                            : "bg-white/[0.02] border-violet-500/10 text-violet-400 hover:bg-violet-500/[0.06] hover:border-violet-500/20"
                         )}
                       >
                         <span className="text-xs font-bold">
@@ -229,7 +334,7 @@ export default function ToolPage() {
                             "text-[10px] mt-0.5",
                             compressionLevel === level.id
                               ? "text-violet-200"
-                              : "text-violet-600",
+                              : "text-violet-600"
                           )}
                         >
                           {level.sub}
@@ -258,8 +363,16 @@ export default function ToolPage() {
                   <Button
                     size="lg"
                     onClick={handleProcess}
-                    className="w-full sm:w-auto min-w-[200px] text-base py-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl shadow-blue-500/20 hover:shadow-blue-500/30 hover:scale-[1.02] border-0 rounded-xl shimmer"
+                    className={cn(
+                      "w-full sm:w-auto min-w-[200px] text-base py-6 text-white shadow-xl border-0 rounded-xl shimmer",
+                      isSummarizeTool
+                        ? "bg-gradient-to-r from-emerald-600 to-teal-600 shadow-emerald-500/20 hover:shadow-emerald-500/30 hover:scale-[1.02]"
+                        : "bg-gradient-to-r from-blue-600 to-indigo-600 shadow-blue-500/20 hover:shadow-blue-500/30 hover:scale-[1.02]"
+                    )}
                   >
+                    {isSummarizeTool && (
+                      <Sparkles className="h-4 w-4 mr-2" />
+                    )}
                     {tool.action}
                   </Button>
                 )}
@@ -269,6 +382,7 @@ export default function ToolPage() {
                   onClick={() => {
                     setFiles([]);
                     setSplitRange("");
+                    setSummaryText("");
                   }}
                   className="text-slate-500 hover:text-red-400 hover:bg-red-500/[0.06]"
                 >
@@ -282,26 +396,106 @@ export default function ToolPage() {
           {status === "processing" && (
             <div className="text-center space-y-5 py-8">
               <div className="relative inline-flex">
-                <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-xl animate-pulse" />
-                <Loader2 className="relative h-14 w-14 animate-spin text-blue-400" />
+                <div
+                  className={cn(
+                    "absolute inset-0 rounded-full blur-xl animate-pulse",
+                    isSummarizeTool
+                      ? "bg-emerald-500/20"
+                      : "bg-blue-500/20"
+                  )}
+                />
+                <Loader2
+                  className={cn(
+                    "relative h-14 w-14 animate-spin",
+                    isSummarizeTool ? "text-emerald-400" : "text-blue-400"
+                  )}
+                />
               </div>
               <div>
                 <p className="text-lg font-semibold text-white">
-                  Processing{" "}
-                  {files.length === 1
-                    ? "your file"
-                    : `${files.length} files`}
-                  ...
+                  {isSummarizeTool
+                    ? "AI is analyzing your document..."
+                    : `Processing ${
+                        files.length === 1
+                          ? "your file"
+                          : `${files.length} files`
+                      }...`}
                 </p>
                 <p className="text-sm text-slate-500 mt-1">
-                  This may take a moment
+                  {isSummarizeTool
+                    ? "Extracting text and generating summary"
+                    : "This may take a moment"}
                 </p>
               </div>
             </div>
           )}
 
-          {/* Success state */}
-          {status === "success" && downloadUrl && (
+          {/* Success state - Summary display */}
+          {status === "success" && isSummarizeTool && summaryText && (
+            <div className="w-full space-y-5 animate-fade-up">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                    <Sparkles className="h-5 w-5 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">
+                      AI Summary
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      Powered by Gemini
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleCopySummary}
+                  className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-all duration-200"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-4 w-4 text-emerald-400" />
+                      <span className="text-emerald-400">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] p-6 max-h-[500px] overflow-y-auto prose prose-invert prose-sm max-w-none">
+                <div
+                  className="text-slate-300 leading-relaxed whitespace-pre-wrap"
+                  style={{ fontSize: "0.9rem" }}
+                >
+                  {summaryText}
+                </div>
+              </div>
+
+              <div className="flex gap-3 justify-center pt-2">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => {
+                    setFiles([]);
+                    setStatus("idle");
+                    setDownloadUrl(null);
+                    setSummaryText("");
+                    setSplitRange("");
+                  }}
+                  className="rounded-xl gap-2"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  Summarize Another
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Success state - Download (non-summarize tools) */}
+          {status === "success" && !isSummarizeTool && downloadUrl && (
             <div className="text-center space-y-7 py-4 animate-fade-up">
               <div className="flex items-center justify-center">
                 <div className="relative">
