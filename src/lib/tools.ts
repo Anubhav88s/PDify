@@ -100,7 +100,8 @@ export const toolsConfig: Record<
   },
   "summarize-pdf": {
     title: "Summarize PDF",
-    description: "Get an AI-powered summary of your PDF document.",
+    description:
+      "AI-powered summaries with 3 modes: Standard overview, Exam prep (definitions, Q&A), and Chapter breakdown. Supports scanned PDFs with OCR.",
     action: "Summarize PDF",
     color: "bg-emerald-600 hover:bg-emerald-700",
     accept: ".pdf",

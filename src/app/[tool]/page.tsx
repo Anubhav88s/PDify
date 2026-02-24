@@ -5,7 +5,7 @@ import { useState } from "react";
 import { FileUpload } from "@/components/features/FileUpload";
 import { Button } from "@/components/ui/Button";
 import { processFile } from "@/lib/mockApi";
-import { summarizePdf } from "@/lib/services/summarizePdf";
+import { summarizePdf, type SummarizeMode } from "@/lib/services/summarizePdf";
 import { useAuth } from "@/lib/AuthContext";
 import {
   Loader2,
@@ -18,6 +18,10 @@ import {
   Sparkles,
   Copy,
   Check,
+  BookOpen,
+  GraduationCap,
+  Layers,
+  ScanSearch,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -45,6 +49,8 @@ export default function ToolPage() {
   const [compressionLevel, setCompressionLevel] = useState<
     "extreme" | "recommended" | "less"
   >("recommended");
+  const [summarizeMode, setSummarizeMode] = useState<SummarizeMode>("standard");
+  const [usedOcr, setUsedOcr] = useState(false);
 
   if (!tool) {
     return (
@@ -146,9 +152,10 @@ export default function ToolPage() {
     setStatus("processing");
     try {
       if (isSummarizeTool) {
-        const result = await summarizePdf(files[0]);
+        const result = await summarizePdf(files[0], summarizeMode);
         if (result.success) {
           setSummaryText(result.summary);
+          setUsedOcr(result.usedOcr);
           setStatus("success");
         } else {
           setStatus("error");
@@ -297,6 +304,74 @@ export default function ToolPage() {
                 </div>
               )}
 
+              {/* Summarize Mode Selector */}
+              {isSummarizeTool && (
+                <div className="bg-emerald-500/[0.04] p-4 rounded-xl border border-emerald-500/10">
+                  <label className="block text-sm font-medium text-emerald-300 mb-3 text-center">
+                    Summarization Mode
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      {
+                        id: "standard" as SummarizeMode,
+                        label: "Standard",
+                        sub: "Overview",
+                        icon: BookOpen,
+                      },
+                      {
+                        id: "exam" as SummarizeMode,
+                        label: "Exam Mode",
+                        sub: "Study & Q&A",
+                        icon: GraduationCap,
+                      },
+                      {
+                        id: "chapter" as SummarizeMode,
+                        label: "Chapters",
+                        sub: "By Section",
+                        icon: Layers,
+                      },
+                    ].map((m) => {
+                      const Icon = m.icon;
+                      return (
+                        <button
+                          key={m.id}
+                          onClick={() => setSummarizeMode(m.id)}
+                          className={cn(
+                            "flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 gap-1",
+                            summarizeMode === m.id
+                              ? "bg-gradient-to-br from-emerald-600 to-teal-600 border-emerald-500 text-white shadow-lg shadow-emerald-500/20"
+                              : "bg-white/[0.02] border-emerald-500/10 text-emerald-400 hover:bg-emerald-500/[0.06] hover:border-emerald-500/20"
+                          )}
+                        >
+                          <Icon className="h-4 w-4" />
+                          <span className="text-xs font-bold">
+                            {m.label}
+                          </span>
+                          <span
+                            className={cn(
+                              "text-[10px]",
+                              summarizeMode === m.id
+                                ? "text-emerald-200"
+                                : "text-emerald-600"
+                            )}
+                          >
+                            {m.sub}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-2 text-center">
+                    {summarizeMode === "standard" &&
+                      "Concise overview with key points and takeaways."}
+                    {summarizeMode === "exam" &&
+                      "Definitions, core concepts, and practice questions for revision."}
+                    {summarizeMode === "chapter" &&
+                      "Section-by-section breakdown of the document."}
+                  </p>
+                </div>
+              )}
+
               {/* Compression level */}
               {(toolKey === "compress-pdf" ||
                 toolKey === "compress-image") && (
@@ -383,6 +458,7 @@ export default function ToolPage() {
                     setFiles([]);
                     setSplitRange("");
                     setSummaryText("");
+                    setUsedOcr(false);
                   }}
                   className="text-slate-500 hover:text-red-400 hover:bg-red-500/[0.06]"
                 >
@@ -414,7 +490,11 @@ export default function ToolPage() {
               <div>
                 <p className="text-lg font-semibold text-white">
                   {isSummarizeTool
-                    ? "AI is analyzing your document..."
+                    ? summarizeMode === "exam"
+                      ? "Generating study material..."
+                      : summarizeMode === "chapter"
+                        ? "Analyzing document structure..."
+                        : "AI is analyzing your document..."
                     : `Processing ${
                         files.length === 1
                           ? "your file"
@@ -423,7 +503,11 @@ export default function ToolPage() {
                 </p>
                 <p className="text-sm text-slate-500 mt-1">
                   {isSummarizeTool
-                    ? "Extracting text and generating summary"
+                    ? summarizeMode === "exam"
+                      ? "Extracting definitions, concepts & creating practice questions"
+                      : summarizeMode === "chapter"
+                        ? "Detecting sections and summarizing each chapter"
+                        : "Extracting text and generating summary"
                     : "This may take a moment"}
                 </p>
               </div>
@@ -433,39 +517,80 @@ export default function ToolPage() {
           {/* Success state - Summary display */}
           {status === "success" && isSummarizeTool && summaryText && (
             <div className="w-full space-y-5 animate-fade-up">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                    <Sparkles className="h-5 w-5 text-emerald-400" />
+                  <div className={cn(
+                    "p-2 rounded-lg border",
+                    summarizeMode === "exam"
+                      ? "bg-amber-500/10 border-amber-500/20"
+                      : summarizeMode === "chapter"
+                        ? "bg-blue-500/10 border-blue-500/20"
+                        : "bg-emerald-500/10 border-emerald-500/20"
+                  )}>
+                    {summarizeMode === "exam" ? (
+                      <GraduationCap className="h-5 w-5 text-amber-400" />
+                    ) : summarizeMode === "chapter" ? (
+                      <Layers className="h-5 w-5 text-blue-400" />
+                    ) : (
+                      <Sparkles className="h-5 w-5 text-emerald-400" />
+                    )}
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white">
-                      AI Summary
+                      {summarizeMode === "exam"
+                        ? "Exam Study Material"
+                        : summarizeMode === "chapter"
+                          ? "Chapter Breakdown"
+                          : "AI Summary"}
                     </h3>
                     <p className="text-xs text-slate-500">
                       Powered by Gemini
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={handleCopySummary}
-                  className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-all duration-200"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-4 w-4 text-emerald-400" />
-                      <span className="text-emerald-400">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4" />
-                      Copy
-                    </>
+                <div className="flex items-center gap-2">
+                  {usedOcr && (
+                    <span className="inline-flex items-center gap-1.5 text-xs text-sky-400 bg-sky-500/10 border border-sky-500/20 px-3 py-1.5 rounded-full">
+                      <ScanSearch className="h-3.5 w-3.5" />
+                      OCR Vision Used
+                    </span>
                   )}
-                </button>
+                  <button
+                    onClick={handleCopySummary}
+                    className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-all duration-200"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="h-4 w-4 text-emerald-400" />
+                        <span className="text-emerald-400">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4" />
+                        Copy
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
-              <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] p-6 max-h-[500px] overflow-y-auto prose prose-invert prose-sm max-w-none">
+              {/* Mode badge */}
+              <div className="flex gap-2">
+                <span className={cn(
+                  "inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full border",
+                  summarizeMode === "exam"
+                    ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
+                    : summarizeMode === "chapter"
+                      ? "text-blue-400 bg-blue-500/10 border-blue-500/20"
+                      : "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                )}>
+                  {summarizeMode === "exam" && <><GraduationCap className="h-3 w-3" /> Exam Mode</>}
+                  {summarizeMode === "chapter" && <><Layers className="h-3 w-3" /> Chapter Breakdown</>}
+                  {summarizeMode === "standard" && <><BookOpen className="h-3 w-3" /> Standard Summary</>}
+                </span>
+              </div>
+
+              <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] p-6 max-h-[600px] overflow-y-auto prose prose-invert prose-sm max-w-none">
                 <div
                   className="text-slate-300 leading-relaxed whitespace-pre-wrap"
                   style={{ fontSize: "0.9rem" }}
@@ -484,6 +609,7 @@ export default function ToolPage() {
                     setDownloadUrl(null);
                     setSummaryText("");
                     setSplitRange("");
+                    setUsedOcr(false);
                   }}
                   className="rounded-xl gap-2"
                 >
