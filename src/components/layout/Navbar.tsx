@@ -18,10 +18,7 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Merge PDF", href: "/merge-pdf" },
-    { name: "Split PDF", href: "/split-pdf" },
-    { name: "Compress PDF", href: "/compress-pdf" },
-    { name: "Convert PDF", href: "/convert-pdf" },
+    { name: "AI Summarizer", href: "/summarize-pdf" },
   ];
 
   const handleLogout = async () => {
@@ -34,14 +31,10 @@ export function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 w-full transition-all duration-500 ${
-        scrolled
-          ? "glass-nav shadow-lg shadow-black/20"
-          : "bg-transparent border-b border-transparent"
-      }`}
+      className="relative z-[99999] w-full transition-all duration-500 bg-transparent border-b border-white/5"
     >
-      <div className="flex h-16 w-full items-center justify-between px-6 lg:px-12 max-w-7xl mx-auto">
-        <Link href="/" className="flex items-center space-x-2.5 group">
+      <div className="flex h-16 w-full items-center justify-between px-6 lg:px-12">
+        <Link href="/" className="flex items-center space-x-2.5 group shrink-0">
           <div className="relative h-12 w-12 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
             <Image
               src="/logo-v2.png"
@@ -67,12 +60,12 @@ export function Navbar() {
               <span className="absolute inset-x-4 -bottom-px h-px bg-gradient-to-r from-blue-500/0 via-blue-500/70 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </Link>
           ))}
-          <Link
-            href="/#tools"
+          <a
+            href="#tools"
             className="ml-3 text-sm font-semibold text-white bg-gradient-brand px-5 py-2 rounded-full shadow-md shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300 shimmer"
           >
             All Tools
-          </Link>
+          </a>
 
           {/* Auth Buttons */}
           <div className="ml-4 flex items-center gap-2">
@@ -140,71 +133,96 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={`md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] transition-opacity duration-300 ${
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsOpen(false)}
+      />
+
+      {/* Mobile Menu Drawer */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-400 ease-in-out ${
-          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        className={`md:hidden fixed inset-y-0 right-0 z-[99999] w-full max-w-[300px] bg-slate-950/95 backdrop-blur-3xl border-l border-white/10 shadow-2xl transform transition-transform duration-400 ease-out flex flex-col ${
+          isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="space-y-1 px-6 pb-5 pt-3 bg-slate-950/95 border-b border-white/5 backdrop-blur-2xl">
+        <div className="flex items-center justify-between p-6 border-b border-white/5">
+          <span className="text-lg font-bold text-white tracking-tight">Menu</span>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-slate-400 hover:text-white p-2 -mr-2 rounded-lg hover:bg-white/[0.06] transition-all duration-200"
+          >
+            <X className="h-6 w-6" />
+            <span className="sr-only">Close menu</span>
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-2">
           {navLinks.map((link, i) => (
             <Link
               key={link.name}
               href={link.href}
-              className="block rounded-xl px-4 py-3 text-base font-medium text-slate-400 hover:bg-white/[0.06] hover:text-white transition-all"
+              className="block rounded-xl px-4 py-3.5 text-base font-medium text-slate-300 hover:bg-white/[0.06] hover:text-white transition-all"
               onClick={() => setIsOpen(false)}
               style={{ animationDelay: `${i * 50}ms` }}
             >
               {link.name}
             </Link>
           ))}
-          <Link
-            href="/#tools"
-            className="block text-center mt-3 text-sm font-semibold text-white bg-gradient-brand px-5 py-3 rounded-xl shadow-md shadow-blue-500/20"
+          <a
+            href="#tools"
+            className="block text-center mt-6 text-sm font-semibold text-white bg-gradient-brand px-5 py-3.5 rounded-xl shadow-md shadow-blue-500/20"
             onClick={() => setIsOpen(false)}
           >
             View All Tools →
-          </Link>
+          </a>
+        </div>
 
-          {/* Mobile Auth */}
-          <div className="mt-3 pt-3 border-t border-white/[0.06]">
-            {loading ? null : user ? (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 px-4 py-2">
-                  <User className="h-4 w-4 text-blue-400" />
-                  <span className="text-sm text-slate-300 truncate">
+        {/* Mobile Auth */}
+        <div className="p-6 border-t border-white/[0.06] bg-slate-900/30">
+          {loading ? null : user ? (
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 px-2 py-2">
+                <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+                  <User className="h-5 w-5 text-blue-400" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs text-slate-500 font-medium uppercase tracking-wider">Signed in as</span>
+                  <span className="text-sm font-medium text-slate-200 truncate max-w-[180px]">
                     {user.email}
                   </span>
                 </div>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsOpen(false);
-                  }}
-                  className="w-full text-center text-sm font-medium text-red-400 hover:bg-red-500/[0.06] px-4 py-3 rounded-xl transition-all"
-                >
-                  Sign Out
-                </button>
               </div>
-            ) : (
-              <div className="space-y-2">
-                <Link
-                  href="/login"
-                  className="block text-center text-sm font-medium text-slate-300 border border-white/[0.08] hover:bg-white/[0.06] px-5 py-3 rounded-xl transition-all"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/signup"
-                  className="block text-center text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 rounded-xl shadow-md shadow-violet-500/20"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
-          </div>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-500/[0.08] border border-red-500/20 px-4 py-3.5 rounded-xl transition-all"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <Link
+                href="/login"
+                className="block text-center text-sm font-bold text-slate-300 border border-white/[0.08] hover:bg-white/[0.06] px-5 py-3.5 rounded-xl transition-all"
+                onClick={() => setIsOpen(false)}
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className="block text-center text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3.5 rounded-xl shadow-md shadow-violet-500/20"
+                onClick={() => setIsOpen(false)}
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </nav>

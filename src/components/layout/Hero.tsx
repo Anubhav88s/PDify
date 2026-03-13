@@ -1,102 +1,55 @@
 import Link from "next/link";
-import {
-  Zap,
-  Shield,
-  Sparkles,
-} from "lucide-react";
 
 export function Hero() {
   return (
-    <div className="relative isolate overflow-hidden min-h-[calc(100vh-4rem)] flex flex-col justify-center">
-      {/* Background Effects */}
-      <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-40" />
-      <div className="absolute inset-0 -z-10 bg-noise" />
-
-      {/* Top Glow Orb */}
-      <div
-        className="absolute -top-48 left-1/2 -translate-x-1/2 -z-10 w-[800px] h-[600px] rounded-full opacity-20 blur-[120px]"
-        style={{
-          background:
-            "radial-gradient(ellipse, #3b82f6 0%, #7c3aed 40%, transparent 70%)",
-        }}
-      />
-
-      {/* Side Orbs */}
-      <div className="absolute top-1/3 -left-32 -z-10 w-[400px] h-[400px] rounded-full bg-blue-500/10 blur-[100px] animate-float" />
-      <div className="absolute top-1/4 -right-32 -z-10 w-[300px] h-[300px] rounded-full bg-violet-500/10 blur-[100px] animate-float-delay" />
-
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-6 sm:py-10 flex-grow flex flex-col justify-center">
-        <div className="mx-auto max-w-3xl text-center">
-          {/* Badge */}
-          <div className="animate-fade-up inline-flex items-center gap-2 rounded-full bg-white/[0.06] border border-white/10 px-3 py-1 text-xs text-slate-300 mb-6 backdrop-blur-sm">
-            <Sparkles className="h-3 w-3 text-blue-400" />
-            <span>100% Free &amp; Open Source</span>
-          </div>
-
-          {/* Heading */}
-          <h1 className="animate-fade-up animation-delay-100 text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl leading-[1.1]">
-            Everything for your{" "}
-            <br className="hidden sm:block" />
-            <span className="text-gradient-hero inline-block mt-1">
-              PDFs &amp; Files
-            </span>{" "}
-            <br className="hidden sm:block" />
-            in one place
+    <section className="max-w-5xl mx-auto px-6 mb-16 pt-16 md:pt-24 lg:pt-32 min-h-[calc(100vh-8rem)] flex items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center w-full">
+        <div className="flex flex-col items-start text-left w-full">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] mb-6 md:mb-8 text-white tracking-tighter animate-fade-up">
+            Powerful tools for <br />
+            <span className="text-gradient-custom luminous-glow leading-[1.2] inline-block pb-2">every document.</span>
           </h1>
-
-          {/* Subtitle */}
-          <p className="animate-fade-up animation-delay-200 mt-4 text-sm sm:text-base leading-6 text-slate-400 max-w-2xl mx-auto">
-            Merge, split, compress, and convert PDFs, images, and documents with just a few clicks — no signup required.
+          <p className="text-lg text-slate-400 max-w-md mb-8 md:mb-10 leading-relaxed font-medium animate-fade-up animation-delay-100">
+            Surgical precision in file conversion and management. Architected for peak performance and military-grade security.
           </p>
-
-          {/* CTA */}
-          <div className="animate-fade-up animation-delay-300 mt-6 flex items-center justify-center gap-x-4">
-            <Link
-              href="#tools"
-              className="group relative inline-flex items-center gap-2 bg-gradient-brand text-white text-sm sm:text-base font-semibold px-6 py-2.5 sm:px-8 sm:py-3 rounded-full shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.03] transition-all duration-300 shimmer"
+          <div className="flex gap-4 animate-fade-up animation-delay-200 mt-8">
+            <a 
+              href="#tools" 
+              className="btn-premium group text-white px-8 md:px-10 py-3 md:py-4 rounded-full text-base font-black flex items-center justify-center gap-2 md:gap-3 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-blue-900/40"
             >
               Explore All Tools
-              <span
-                aria-hidden="true"
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              >
-                →
-              </span>
-            </Link>
+              <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </a>
           </div>
-
-          {/* Trust Indicators */}
-          <div className="animate-fade-up animation-delay-500 mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto">
-            {[
-              {
-                icon: Zap,
-                label: "Lightning Fast",
-              },
-              {
-                icon: Shield,
-                label: "100% Secure",
-              },
-              {
-                icon: Sparkles,
-                label: "No Signup",
-              },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="flex items-center justify-center gap-2 rounded-lg bg-white/[0.03] border border-white/[0.06] px-3 py-2 backdrop-blur-sm"
-              >
-                <item.icon className="h-3.5 w-3.5 text-blue-400" />
-                <p className="text-xs font-medium text-white">
-                  {item.label}
-                </p>
+        </div>
+        
+        <div className="relative group animate-fade-up animation-delay-300 w-full max-w-[320px] lg:max-w-[500px] mx-auto lg:ml-auto mt-12 lg:mt-0">
+          <div className="absolute -inset-8 bg-blue-600/20 blur-3xl rounded-full opacity-30 group-hover:opacity-50 transition-opacity"></div>
+          <div className="relative aspect-square w-full rounded-[2rem] overflow-hidden glass-card border-white/5">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-slate-900/40 to-slate-950/60"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="grid grid-cols-2 gap-4 md:gap-6 p-8 md:p-12">
+                <div className="w-20 md:w-28 h-28 md:h-36 bg-white/5 rounded-2xl border border-white/10 flex flex-col items-center justify-center gap-2 md:gap-3 backdrop-blur-sm transition-transform hover:scale-105">
+                  <span className="material-symbols-outlined text-blue-400 text-3xl md:text-4xl">picture_as_pdf</span>
+                  <div className="h-1 w-10 md:w-14 bg-white/10 rounded-full mt-2"></div>
+                </div>
+                <div className="w-20 md:w-28 h-28 md:h-36 bg-white/5 rounded-2xl border border-white/10 flex flex-col items-center justify-center gap-2 md:gap-3 backdrop-blur-sm mt-6 md:mt-10 transition-transform hover:scale-105">
+                  <span className="material-symbols-outlined text-blue-500 text-3xl md:text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
+                  <div className="h-1 w-10 md:w-14 bg-white/10 rounded-full mt-2"></div>
+                </div>
+                <div className="w-20 md:w-28 h-28 md:h-36 bg-white/5 rounded-2xl border border-white/10 flex flex-col items-center justify-center gap-2 md:gap-3 backdrop-blur-sm -mt-4 md:-mt-6 transition-transform hover:scale-105">
+                  <span className="material-symbols-outlined text-cyan-400 text-3xl md:text-4xl">image</span>
+                  <div className="h-1 w-10 md:w-14 bg-white/10 rounded-full mt-2"></div>
+                </div>
+                <div className="w-20 md:w-28 h-28 md:h-36 bg-white/5 rounded-2xl border border-white/10 flex flex-col items-center justify-center gap-2 md:gap-3 backdrop-blur-sm mt-2 md:mt-4 transition-transform hover:scale-105">
+                  <span className="material-symbols-outlined text-indigo-400 text-3xl md:text-4xl">analytics</span>
+                  <div className="h-1 w-10 md:w-14 bg-white/10 rounded-full mt-2"></div>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
-      
-      {/* Bottom gradient fade */}
-      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-slate-950 to-transparent -z-[5]" />
-    </div>
+    </section>
   );
 }

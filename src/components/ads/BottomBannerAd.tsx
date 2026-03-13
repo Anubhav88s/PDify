@@ -25,7 +25,7 @@ export function BottomBannerAd({ adSlot }: { adSlot: string }) {
   if (!adSlot) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center bg-slate-900/80 backdrop-blur-sm border-t border-slate-700/50 py-1">
+    <div className="fixed bottom-0 left-0 right-0 z-[40] flex justify-center bg-slate-900/80 backdrop-blur-sm border-t border-slate-700/50 py-1">
       <ins
         className="adsbygoogle"
         style={{ display: "block", width: "100%", maxWidth: "728px", height: "90px" }}

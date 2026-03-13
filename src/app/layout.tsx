@@ -36,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7672562154863695"
@@ -43,11 +44,11 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-[family-name:var(--font-inter)] antialiased min-h-screen flex flex-col bg-slate-950 text-slate-50 pb-24`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-[family-name:var(--font-inter)] antialiased min-h-screen flex flex-col bg-[#020617] text-slate-300 selection:bg-blue-500/30 pb-0`}
       >
         <AuthProvider>
           <Navbar />
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow app-bg">{children}</main>
           <Footer />
           <BottomBannerAd adSlot={process.env.NEXT_PUBLIC_GOOGLE_AD_SLOT || ""} />
         </AuthProvider>

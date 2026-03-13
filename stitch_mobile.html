@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3b82f6",
+                        "background-light": "#0f172a",
+                        "background-dark": "#020617",
+                        "navy-900": "#020617",
+                        "navy-800": "#0f172a",
+                        "navy-700": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-100 antialiased">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-dark/80 backdrop-blur-md border-b border-slate-800">
+<div class="flex items-center justify-between px-4 h-16">
+<div class="flex items-center gap-2">
+<div class="bg-primary p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-white text-xl">description</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-white">PDify</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="text-slate-300 text-sm font-medium hover:text-white px-2">Sign In</button>
+<button class="bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                    Get Started
+                </button>
+</div>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="relative px-4 py-12 overflow-hidden">
+<!-- Abstract Background Glows -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/20 blur-[100px] rounded-full"></div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<h1 class="text-3xl font-black leading-tight tracking-tight text-white mb-4">
+                Powerful tools for <br/>
+<span class="bg-gradient-to-r from-blue-400 to-blue-700 bg-clip-text text-transparent">every document</span>
+</h1>
+<p class="text-slate-400 text-sm leading-relaxed max-w-[280px] mb-8">
+                The most advanced PDF management suite powered by neural processing.
+            </p>
+<div class="flex flex-col w-full gap-3 px-4 mb-12">
+<button class="bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+                    Explore All Tools
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Hero Visual (Matching Tablet Style Ref) -->
+<div class="relative group w-full max-w-[320px]">
+<div class="absolute -inset-4 bg-primary/20 blur-3xl rounded-full opacity-30"></div>
+<div class="relative aspect-square w-full rounded-3xl overflow-hidden glass-card border-white/5 p-8 flex items-center justify-center">
+<div class="grid grid-cols-2 gap-4">
+<div class="w-20 h-28 bg-white/5 rounded-lg border border-white/10 flex flex-col items-center justify-center gap-2">
+<span class="material-symbols-outlined text-blue-400">picture_as_pdf</span>
+<div class="h-1 w-10 bg-white/10 rounded-full"></div>
+</div>
+<div class="w-20 h-28 bg-white/5 rounded-lg border border-white/10 flex flex-col items-center justify-center gap-2 mt-6">
+<span class="material-symbols-outlined text-blue-500">description</span>
+<div class="h-1 w-10 bg-white/10 rounded-full"></div>
+</div>
+<div class="w-20 h-28 bg-white/5 rounded-lg border border-white/10 flex flex-col items-center justify-center gap-2 -mt-4">
+<span class="material-symbols-outlined text-cyan-400">image</span>
+<div class="h-1 w-10 bg-white/10 rounded-full"></div>
+</div>
+<div class="w-20 h-28 bg-white/5 rounded-lg border border-white/10 flex flex-col items-center justify-center gap-2 mt-2">
+<span class="material-symbols-outlined text-indigo-400">analytics</span>
+<div class="h-1 w-10 bg-white/10 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Tools Grid Section -->
+<section class="px-4 py-8">
+<div class="flex items-center justify-between mb-6"><h2 class="text-2xl font-black text-white tracking-tight">PDF Tools</h2>
+<div class="w-12 h-1 bg-gradient-to-r from-blue-600 to-transparent rounded-full mt-2"></div></div>
+<div class="grid grid-cols-1 gap-6">
+<!-- 1. Merge PDF -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+<span class="material-symbols-outlined text-blue-400 text-2xl">call_merge</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">Merge PDF</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Combine multiple PDFs into one high-quality unified document.</p>
+<div class="mt-auto flex items-center text-blue-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 2. Split PDF -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-blue-700/10 rounded-xl flex items-center justify-center border border-blue-700/20">
+<span class="material-symbols-outlined text-blue-500 text-2xl">content_cut</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">Split PDF</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Separate pages from any PDF file with zero quality loss.</p>
+<div class="mt-auto flex items-center text-blue-500 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 3. Compress PDF -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+<span class="material-symbols-outlined text-blue-400 text-2xl">expand_less</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">Compress PDF</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Reduce file size while maintaining pixel-perfect clarity.</p>
+<div class="mt-auto flex items-center text-blue-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 4. JPG to PDF -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+<span class="material-symbols-outlined text-blue-400 text-2xl">image</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">JPG to PDF</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Convert image sets to professional PDF portfolios instantly.</p>
+<div class="mt-auto flex items-center text-blue-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 5. Word to PDF -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-blue-600/10 rounded-xl flex items-center justify-center border border-blue-600/20">
+<span class="material-symbols-outlined text-blue-400 text-2xl">description</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">Word to PDF</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">DOCX to PDF conversion with full formatting preservation.</p>
+<div class="mt-auto flex items-center text-blue-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 6. PPT to PDF -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center border border-orange-500/20">
+<span class="material-symbols-outlined text-orange-400 text-2xl">slideshow</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">PPT to PDF</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Transform slide decks into portable document formats.</p>
+<div class="mt-auto flex items-center text-orange-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 7. PDF to Word -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+<span class="material-symbols-outlined text-blue-400 text-2xl">article</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">PDF to Word</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Convert non-editable PDFs into fully editable Word docs.</p>
+<div class="mt-auto flex items-center text-blue-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 8. Compress Image -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
+<span class="material-symbols-outlined text-emerald-400 text-2xl">photo_size_select_small</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">Compress Image</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Reduce JPG &amp; PNG file sizes without losing quality.</p>
+<div class="mt-auto flex items-center text-emerald-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 9. PDF to Image -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+<span class="material-symbols-outlined text-blue-400 text-2xl">collections</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">PDF to Image</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Extract pages from PDF and save them as high-res images.</p>
+<div class="mt-auto flex items-center text-blue-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 10. PDF to PPT -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center border border-orange-500/20">
+<span class="material-symbols-outlined text-orange-400 text-2xl">present_to_all</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">PDF to PPT</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Convert PDF pages to editable PowerPoint presentations.</p>
+<div class="mt-auto flex items-center text-orange-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 11. PDF to DOC -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col cursor-pointer">
+<div class="mb-6">
+<div class="w-12 h-12 bg-blue-600/10 rounded-xl flex items-center justify-center border border-blue-600/20">
+<span class="material-symbols-outlined text-blue-400 text-2xl">view_day</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">PDF to DOC</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Quickly transform any PDF into a standard Word document.</p>
+<div class="mt-auto flex items-center text-blue-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Get Started <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+<!-- 12. Summarize PDF (AI PRO) -->
+<div class="glass-card relative overflow-hidden p-8 rounded-3xl group flex flex-col border-blue-500/30 bg-blue-500/[0.04] cursor-pointer">
+<div class="flex justify-between items-start mb-6">
+<div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+<span class="material-symbols-outlined text-blue-400 text-2xl">auto_awesome</span>
+</div>
+<div class="flex items-center gap-1 bg-blue-600 text-white text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
+                AI PRO
+            </div>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">Summarize PDF</h3>
+<p class="text-slate-400 text-sm leading-relaxed mb-6 font-medium">Intelligent insights, chapters, and key points extracted by AI.</p>
+<div class="mt-auto flex items-center text-blue-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            Try AI Magic <span class="material-symbols-outlined text-sm ml-2">arrow_forward</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-navy-900 border-t border-slate-800 mt-8 px-4 py-12">
+<div class="flex flex-col gap-8">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<div class="bg-primary p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-white text-lg">description</span>
+</div>
+<h2 class="text-lg font-bold text-white tracking-tight">PDify</h2>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed">
+                    Elevating your document workflow with AI-driven intelligence. Fast, secure, and professional.
+                </p>
+<div class="flex gap-4 pt-2">
+<a class="text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+<a class="text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">language</span>
+</a>
+<a class="text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">forum</span>
+</a>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col gap-4">
+<h4 class="text-white text-sm font-bold uppercase tracking-widest">Product</h4>
+<ul class="flex flex-col gap-3">
+<li><a class="text-slate-400 text-sm hover:text-white transition-colors" href="#">Desktop App</a></li>
+<li><a class="text-slate-400 text-sm hover:text-white transition-colors" href="#">Mobile Web</a></li>
+<li><a class="text-slate-400 text-sm hover:text-white transition-colors" href="#">Pricing</a></li>
+<li><a class="text-slate-400 text-sm hover:text-white transition-colors" href="#">Chrome Extension</a></li>
+</ul>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-white text-sm font-bold uppercase tracking-widest">Legal</h4>
+<ul class="flex flex-col gap-3">
+<li><a class="text-slate-400 text-sm hover:text-white transition-colors" href="#">Privacy</a></li>
+<li><a class="text-slate-400 text-sm hover:text-white transition-colors" href="#">Terms</a></li>
+<li><a class="text-slate-400 text-sm hover:text-white transition-colors" href="#">Cookies</a></li>
+<li><a class="text-slate-400 text-sm hover:text-white transition-colors" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-slate-800 flex flex-col gap-4 text-center">
+<p class="text-slate-500 text-xs">© 2024 PDify AI Technologies Inc.</p>
+<div class="flex justify-center gap-6">
+<span class="text-slate-600 text-[10px] uppercase font-bold">Status: Online</span>
+<span class="text-slate-600 text-[10px] uppercase font-bold">Ver: 4.2.0-stable</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

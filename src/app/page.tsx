@@ -1,33 +1,21 @@
 import { Hero } from "@/components/layout/Hero";
 import { ToolGrid } from "@/components/features/ToolGrid";
-import { ArrowDown } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-transparent">
+    <main className="min-h-screen bg-transparent pb-32">
       <Hero />
 
       {/* Tools Section */}
-      <div id="tools" className="relative pb-24">
-        {/* Background decorations */}
-        <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-30" />
-
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="mx-auto max-w-2xl text-center mb-14 animate-fade-up">
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Most Popular{" "}
-              <span className="text-gradient">PDF Tools</span>
-            </h2>
-            <p className="mt-4 text-base sm:text-lg leading-8 text-slate-400">
-              Powerful tools to handle all your PDF and file conversion needs.
-              Fast, free, and secure.
-            </p>
-          </div>
-
-          <ToolGrid />
+      <section id="tools" className="px-4 md:px-6 max-w-7xl mx-auto relative z-10">
+        <div className="text-center mb-12 md:mb-24 animate-fade-up">
+          <span className="text-[10px] md:text-[11px] font-black text-blue-500 uppercase tracking-[0.5em] mb-3 md:mb-4 block">Professional Suite</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 md:mb-6 text-white tracking-tight">All Professional Tools</h2>
+          <div className="w-12 md:w-16 h-1 bg-gradient-to-r from-blue-600 to-transparent mx-auto rounded-full"></div>
         </div>
-      </div>
+
+        <ToolGrid />
+      </section>
     </main>
   );
 }

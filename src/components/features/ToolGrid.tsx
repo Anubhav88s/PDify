@@ -1,108 +1,115 @@
 "use client";
 
 import Link from "next/link";
-import {
-  FileStack,
-  Scissors,
-  Minimize2,
-  FileType,
-  Image as ImageIcon,
-  FileText,
-  Presentation,
-  ArrowRight,
-  Sparkles,
-  Lock,
-} from "lucide-react";
 import { toolsConfig } from "@/lib/tools";
 import { useAuth } from "@/lib/AuthContext";
 
-const iconMap: Record<string, any> = {
-  "merge-pdf": FileStack,
-  "split-pdf": Scissors,
-  "compress-pdf": Minimize2,
-  "jpg-to-pdf": ImageIcon,
-  "word-to-pdf": FileText,
-  "powerpoint-to-pdf": Presentation,
-  "convert-pdf": FileType,
-  "compress-image": ImageIcon,
-  "pdf-to-image": ImageIcon,
-  "pdf-to-ppt": Presentation,
-  "pdf-to-doc": FileText,
-  "summarize-pdf": Sparkles,
+const iconMap: Record<string, string> = {
+  "merge-pdf": "call_merge",
+  "split-pdf": "content_cut",
+  "compress-pdf": "expand_less",
+  "jpg-to-pdf": "image",
+  "word-to-pdf": "description",
+  "powerpoint-to-pdf": "slideshow",
+  "convert-pdf": "autorenew",
+  "compress-image": "photo_size_select_small",
+  "pdf-to-image": "collections",
+  "pdf-to-ppt": "present_to_all",
+  "pdf-to-doc": "view_day",
+  "summarize-pdf": "auto_awesome",
 };
 
-// Unique gradient for each tool icon to add color variety
-const iconGradients: Record<string, string> = {
-  "merge-pdf": "from-blue-500 to-blue-600",
-  "split-pdf": "from-violet-500 to-violet-600",
-  "compress-pdf": "from-indigo-500 to-indigo-600",
-  "jpg-to-pdf": "from-sky-500 to-sky-600",
-  "word-to-pdf": "from-blue-600 to-indigo-600",
-  "powerpoint-to-pdf": "from-purple-500 to-purple-600",
-  "convert-pdf": "from-blue-500 to-violet-500",
-  "compress-image": "from-indigo-500 to-purple-500",
-  "pdf-to-image": "from-sky-500 to-blue-500",
-  "pdf-to-ppt": "from-violet-600 to-purple-600",
-  "pdf-to-doc": "from-blue-500 to-blue-700",
-  "summarize-pdf": "from-emerald-500 to-teal-600",
+const visualMap: Record<string, any> = {
+  "merge-pdf": { color: "blue", action: "Get Started" },
+  "split-pdf": { color: "deepblue", action: "Get Started" },
+  "compress-pdf": { color: "blue", action: "Get Started" },
+  "jpg-to-pdf": { color: "blue", action: "Get Started" },
+  "word-to-pdf": { color: "blue", action: "Get Started" },
+  "powerpoint-to-pdf": { color: "orange", action: "Get Started" },
+  "convert-pdf": { color: "blue", action: "Get Started" },
+  "compress-image": { color: "emerald", action: "Get Started" },
+  "pdf-to-image": { color: "blue", action: "Get Started" },
+  "pdf-to-ppt": { color: "orange", action: "Get Started" },
+  "pdf-to-doc": { color: "blue", action: "Get Started" },
+  "summarize-pdf": { color: "blue", action: "Try AI Magic", isAi: true },
+};
+
+const styles = {
+  blue: {
+    glowBg: "bg-blue-500/5",
+    iconWrapper: "bg-blue-500/10 border-blue-500/20 icon-glow-blue",
+    iconText: "text-blue-400",
+    actionText: "text-blue-400",
+  },
+  deepblue: {
+    glowBg: "bg-blue-600/5",
+    iconWrapper: "bg-blue-700/10 border-blue-700/20 icon-glow-deepblue",
+    iconText: "text-blue-500",
+    actionText: "text-blue-500",
+  },
+  emerald: {
+    glowBg: "bg-emerald-500/5",
+    iconWrapper: "bg-emerald-500/10 border-emerald-500/20 icon-glow-emerald",
+    iconText: "text-emerald-400",
+    actionText: "text-emerald-400",
+  },
+  orange: {
+    glowBg: "bg-orange-500/5",
+    iconWrapper: "bg-orange-500/10 border-orange-500/20 icon-glow-orange",
+    iconText: "text-orange-400",
+    actionText: "text-orange-400",
+  },
 };
 
 export function ToolGrid() {
   const { user } = useAuth();
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
       {Object.entries(toolsConfig).map(([key, tool], index) => {
-        const Icon = iconMap[key] || FileType;
-        const gradient = iconGradients[key] || "from-blue-500 to-violet-500";
+        const iconName = iconMap[key] || "description";
+        const visual = visualMap[key] || { color: "blue", action: "Get Started" };
+        const s = styles[visual.color as keyof typeof styles];
         const isLocked = tool.requiresAuth && !user;
+
+        const isAi = visual.isAi;
+        const cardClasses = isAi 
+          ? "glass-card relative overflow-hidden p-8 md:p-10 rounded-3xl group flex flex-col h-full border-blue-500/30 bg-blue-500/[0.04] cursor-pointer animate-fade-up"
+          : "glass-card relative overflow-hidden p-8 md:p-10 rounded-3xl group flex flex-col h-full cursor-pointer animate-fade-up";
 
         return (
           <Link
             href={`/${key}`}
             key={key}
-            className="group relative block h-full animate-fade-up"
-            style={{ animationDelay: `${index * 60}ms` }}
+            className={cardClasses}
+            style={{ animationDelay: `${index * 50}ms` }}
           >
-            <div className="relative h-full overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-blue-500/30 hover:bg-white/[0.05] hover:shadow-2xl hover:shadow-blue-500/[0.08]">
-              {/* Hover glow */}
-              <div className="absolute -right-24 -top-24 z-0 h-[200px] w-[200px] rounded-full bg-blue-500/0 blur-[80px] transition-all duration-500 group-hover:bg-blue-500/10" />
-
-              {/* Auth badge */}
+            <div className={`tool-inner-glow ${s.glowBg}`}></div>
+            
+            <div className={`flex ${isAi || tool.requiresAuth ? 'justify-between items-start' : ''} mb-6 md:mb-12 relative z-10`}>
+              <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform border ${s.iconWrapper}`}>
+                <span className={`material-symbols-outlined text-2xl md:text-3xl ${s.iconText}`}>{iconName}</span>
+              </div>
+              
               {tool.requiresAuth && (
-                <div className="absolute top-4 right-4 z-10">
-                  {isLocked ? (
-                    <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400">
-                      <Lock className="h-3 w-3" />
-                      <span className="text-[10px] font-semibold">Sign in</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                      <Sparkles className="h-3 w-3" />
-                      <span className="text-[10px] font-semibold">AI</span>
-                    </div>
-                  )}
+                <div className="flex items-center gap-1.5 bg-blue-600 text-white text-[8px] md:text-[9px] font-black px-2 md:px-3 py-1 md:py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-blue-500/30">
+                  {isLocked ? "SIGN IN" : (isAi ? "AI PRO" : "PRO")}
                 </div>
               )}
-
-              <div className="relative z-10 flex flex-col items-start gap-4">
-                {/* Icon */}
-                <div
-                  className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-blue-500/20`}
-                >
-                  <Icon className="h-5 w-5 text-white" />
+              {!tool.requiresAuth && isAi && (
+                <div className="flex items-center gap-1.5 bg-blue-600 text-white text-[8px] md:text-[9px] font-black px-2 md:px-3 py-1 md:py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-blue-500/30">
+                  AI PRO
                 </div>
+              )}
+            </div>
 
-                <div className="space-y-2">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    {tool.title}
-                    <ArrowRight className="h-3.5 w-3.5 text-slate-500 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-blue-400" />
-                  </h3>
-                  <p className="text-sm text-slate-500 leading-relaxed group-hover:text-slate-400 transition-colors duration-300">
-                    {tool.description}
-                  </p>
-                </div>
-              </div>
+            <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-4 text-white relative z-10">{tool.title}</h3>
+            <p className="text-slate-400 text-sm leading-relaxed mb-6 md:mb-12 relative z-10 font-medium">
+              {tool.description}
+            </p>
+
+            <div className={`mt-auto flex items-center ${s.actionText} text-[10px] font-black tracking-[0.2em] group-hover:translate-x-2 transition-transform relative z-10 uppercase`}>
+              {visual.action} <span className="material-symbols-outlined text-sm ml-2">arrow_forward</span>
             </div>
           </Link>
         );
