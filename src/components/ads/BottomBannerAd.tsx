@@ -2,22 +2,17 @@
 
 import { useEffect, useRef } from "react";
 
-interface BottomBannerAdProps {
-  adSlot: string;
-}
-
 declare global {
   interface Window {
     adsbygoogle: unknown[];
   }
 }
 
-export function BottomBannerAd({ adSlot }: BottomBannerAdProps) {
-  const adRef = useRef<HTMLDivElement>(null);
+export function BottomBannerAd({ adSlot }: { adSlot: string }) {
   const isAdLoaded = useRef(false);
 
   useEffect(() => {
-    if (isAdLoaded.current) return;
+    if (isAdLoaded.current || !adSlot) return;
 
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -25,21 +20,16 @@ export function BottomBannerAd({ adSlot }: BottomBannerAdProps) {
     } catch (err) {
       console.error("AdSense error:", err);
     }
-  }, []);
+  }, [adSlot]);
 
-  const publisherId = process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || "";
-
-  if (!publisherId || !adSlot) return null;
+  if (!adSlot) return null;
 
   return (
-    <div
-      ref={adRef}
-      className="fixed bottom-0 left-0 right-0 z-50 flex justify-center bg-slate-900/80 backdrop-blur-sm border-t border-slate-700/50 py-1"
-    >
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center bg-slate-900/80 backdrop-blur-sm border-t border-slate-700/50 py-1">
       <ins
         className="adsbygoogle"
         style={{ display: "block", width: "100%", maxWidth: "728px", height: "90px" }}
-        data-ad-client={publisherId}
+        data-ad-client="ca-pub-7672562154863695"
         data-ad-slot={adSlot}
         data-ad-format="horizontal"
         data-full-width-responsive="true"
