@@ -4,6 +4,8 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/lib/AuthContext";
+import { GoogleAdsense } from "@/components/ads/GoogleAdsense";
+import { BottomBannerAd } from "@/components/ads/BottomBannerAd";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,15 +35,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <GoogleAdsense />
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-[family-name:var(--font-inter)] antialiased min-h-screen flex flex-col bg-slate-950 text-slate-50`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-[family-name:var(--font-inter)] antialiased min-h-screen flex flex-col bg-slate-950 text-slate-50 pb-24`}
       >
         <AuthProvider>
           <Navbar />
           <main className="flex-grow">{children}</main>
           <Footer />
+          <BottomBannerAd adSlot={process.env.NEXT_PUBLIC_GOOGLE_AD_SLOT || ""} />
         </AuthProvider>
       </body>
     </html>
   );
 }
+
