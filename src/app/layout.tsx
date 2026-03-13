@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/lib/AuthContext";
-import { GoogleAdsense } from "@/components/ads/GoogleAdsense";
 import { BottomBannerAd } from "@/components/ads/BottomBannerAd";
 
 const inter = Inter({
@@ -35,7 +35,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <GoogleAdsense />
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7672562154863695"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} font-[family-name:var(--font-inter)] antialiased min-h-screen flex flex-col bg-slate-950 text-slate-50 pb-24`}
       >
@@ -49,4 +55,3 @@ export default function RootLayout({
     </html>
   );
 }
-
