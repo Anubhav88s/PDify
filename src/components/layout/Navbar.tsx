@@ -31,7 +31,11 @@ export function Navbar() {
 
   return (
     <nav
-      className="relative z-[99999] w-full transition-all duration-500 bg-transparent border-b border-white/5"
+      className={`sticky top-0 z-[99999] w-full transition-all duration-500 ${
+        scrolled
+          ? "glass-nav shadow-lg shadow-black/20"
+          : "bg-transparent border-b border-white/5"
+      }`}
     >
       <div className="flex h-16 w-full items-center justify-between px-6 lg:px-12">
         <Link href="/" className="flex items-center space-x-2.5 group shrink-0">
