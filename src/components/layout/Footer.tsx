@@ -8,7 +8,7 @@ export function Footer() {
       {/* Top glow line */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
 
-      <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 pt-14 pb-28 lg:pb-32 lg:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
           {/* Brand Section */}
           <div className="md:col-span-2 space-y-5">
