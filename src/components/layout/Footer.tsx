@@ -39,6 +39,22 @@ export function Footer() {
               tools. Building the future of file management, one click at a
               time.
             </p>
+            {/* Get it on Google Play */}
+            <Link
+              href="https://play.google.com/store/apps/details?id=com.vrbharat.pdify"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-4 hover:opacity-80 transition-opacity duration-200"
+            >
+              <Image
+                src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                alt="Get it on Google Play"
+                width={155}
+                height={60}
+                className="h-12 w-auto"
+                unoptimized
+              />
+            </Link>
             {/* Social links */}
             <div className="flex gap-2">
               {[
