@@ -41,7 +41,7 @@ export function Navbar() {
         <Link href="/" className="flex items-center space-x-2.5 group shrink-0">
           <div className="relative h-12 w-12 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
             <Image
-              src="/logo-v2.png"
+              src="/logo v3.png"
               alt="PDify Logo"
               fill
               className="object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.4)]"

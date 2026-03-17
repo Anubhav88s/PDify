@@ -26,7 +26,7 @@ export function Footer() {
             <div className="flex items-center space-x-2.5 group">
               <div className="relative h-12 w-12 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
                 <Image
-                  src="/logo-v2.png"
+                  src="/logo v3.png"
                   alt="PDify Logo"
                   fill
                   className="object-contain"
@@ -43,7 +43,7 @@ export function Footer() {
             <div className="flex gap-2">
               {[
                 { icon: XLogo, label: "X", href: "https://x.com/vrBharatb?s=20" },
-                { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/vr_bharat?igsh=ZjR2YmJvZXF2eDN0" },
+                { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/pdify_vrbharat?utm_source=qr&igsh=M3lqd2tpaDZyNDd2" },
               ].map((social) => (
                 <Link
                   key={social.label}

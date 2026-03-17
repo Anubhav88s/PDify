@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   description:
     "Every tool you need to use PDFs, at your fingertips. All are 100% FREE and easy to use! Merge, split, compress, convert, rotate, unlock and watermark PDFs with just a few clicks.",
   icons: {
-    icon: "/logo-v2.png",
+    icon: "/logo v3.png",
   },
 };
 

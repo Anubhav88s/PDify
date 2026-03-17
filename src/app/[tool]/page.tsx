@@ -247,22 +247,40 @@ export default function ToolPage() {
     doc.setFont("helvetica", "normal");
 
     const lines = doc.splitTextToSize(summaryText, maxWidth);
+    let isBold = false;
     for (const line of lines) {
       if (y + 6 > pageHeight - margin) {
         doc.addPage();
         y = margin;
       }
-      // Bold markdown headers
-      if (/^#{1,3}\s/.test(line)) {
+      // Bold markdown headers (any level)
+      if (/^#+\s/.test(line)) {
         doc.setFont("helvetica", "bold");
         doc.setFontSize(13);
         y += 3;
-        doc.text(line.replace(/^#{1,3}\s/, ""), margin, y);
+        doc.text(line.replace(/^#+\s/, ""), margin, y);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(11);
         y += 6;
       } else {
-        doc.text(line, margin, y);
+        const parts = line.split(/(\*\*.*?\*\*|\*\*)/g);
+        let currentX = margin;
+        for (const part of parts) {
+          if (!part) continue;
+          if (part === "**") {
+            isBold = !isBold;
+          } else if (part.startsWith("**") && part.endsWith("**")) {
+            doc.setFont("helvetica", "bold");
+            const cleanText = part.slice(2, -2);
+            doc.text(cleanText, currentX, y);
+            currentX += doc.getTextWidth(cleanText) || (doc.getStringUnitWidth(cleanText) * doc.getFontSize() / doc.internal.scaleFactor);
+            doc.setFont("helvetica", isBold ? "bold" : "normal");
+          } else {
+            doc.setFont("helvetica", isBold ? "bold" : "normal");
+            doc.text(part, currentX, y);
+            currentX += doc.getTextWidth(part) || (doc.getStringUnitWidth(part) * doc.getFontSize() / doc.internal.scaleFactor);
+          }
+        }
         y += 5;
       }
     }
