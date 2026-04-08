@@ -108,4 +108,14 @@ export const toolsConfig: Record<
     fileLabel: "PDF file",
     requiresAuth: true,
   },
+  "generate-notes": {
+    title: "Generate Notes",
+    description:
+      "Type any topic or upload a syllabus PDF — AI generates comprehensive study notes, quick revision sheets, or flashcards instantly.",
+    action: "Generate Notes",
+    color: "bg-violet-600 hover:bg-violet-700",
+    accept: ".pdf,.txt",
+    fileLabel: "Syllabus PDF (optional)",
+    requiresAuth: true,
+  },
 };
