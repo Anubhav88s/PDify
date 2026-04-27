@@ -17,6 +17,7 @@ const iconMap: Record<string, string> = {
   "pdf-to-ppt": "present_to_all",
   "pdf-to-doc": "view_day",
   "summarize-pdf": "auto_awesome",
+  "generate-notes": "school",
 };
 
 const visualMap: Record<string, any> = {
@@ -32,6 +33,7 @@ const visualMap: Record<string, any> = {
   "pdf-to-ppt": { color: "orange", action: "Get Started" },
   "pdf-to-doc": { color: "blue", action: "Get Started" },
   "summarize-pdf": { color: "blue", action: "Try AI Magic", isAi: true },
+  "generate-notes": { color: "violet", action: "Try AI Magic", isAi: true },
 };
 
 const styles = {
@@ -58,6 +60,12 @@ const styles = {
     iconWrapper: "bg-orange-500/10 border-orange-500/20 icon-glow-orange",
     iconText: "text-orange-400",
     actionText: "text-orange-400",
+  },
+  violet: {
+    glowBg: "bg-violet-500/5",
+    iconWrapper: "bg-violet-500/10 border-violet-500/20 icon-glow-violet",
+    iconText: "text-violet-400",
+    actionText: "text-violet-400",
   },
 };
 

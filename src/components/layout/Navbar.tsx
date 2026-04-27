@@ -19,6 +19,7 @@ export function Navbar() {
 
   const navLinks = [
     { name: "AI Summarizer", href: "/summarize-pdf" },
+    { name: "AI Notes", href: "/generate-notes" },
   ];
 
   const handleLogout = async () => {
